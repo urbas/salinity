@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+.coverage*
+.pytest_cache/
+.venv/
+*.egg-info/
+*.eggs/
+build/
+dist/
+htmlcov/
+test-results/
+
+# vscode
+.vscode/

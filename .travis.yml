@@ -1,0 +1,20 @@
+language: python
+python:
+  - '3.7'
+install:
+  - pip install -e .
+  - pip install -r requirements_dev.txt
+script:
+  - black --check setup.py tests salinity
+  - flake8 setup.py tests salinity
+  - pytest
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: urbas
+  password:
+    secure: FeNOwjzfp04USRXNE+1GIs2PECjx/jBzOJP7P/6Y9I68jT+AL5dW6l/WTzhJBaayTnfRC/g4grStTMv2bvawjT+J6tp6he7r++DdNBF0xsYxOUZbSMfom46PIPrpTFAM8Uiny0o0fHdSxWyzOiGzEeNqcT2nRvY5n3ME5BVyLMPFw+DOAz8fzB6uU0U/kRPQP5B8w3Y+YPe6IPpB8UGYc10SqPSmMr4+CzTEap7AsiaG7SFi/c0qERE9Th/pMj0GGvWbe7R4SpYkUpbYi4+07j2vnZp/HRZr8+7+QOrjRtu4NBN+duayIswcFnDuKv0DBVaJTGF+x8/OfxR1cTBk74oTScw3d4NNJuBoF1mxS6satYwiadctvP3QFeYtSY4Fl/cLXbGNUhL+CRithJ5op0CxG+yhKVs6B7kFei6r4eieSwTXt4K4MRYKAYFP+peVz3fsTQwFtP+RToLxthOVgN8KbWkL1nkLz/+VCyadheanydLyHldZA6aHCyNE1TxzzhPMCqv9Opifr0de4Oaxq9ZlA+oTnUZMhyNTSUCXw9NElDS0EXreX7kPy7Fq0TF+FiamZH0OlB7M2+J7QP17XWzVGtCGGzopLOsyxFaqRYtxnzjHuSvg/JaSscKWJcP1R4zt6YtFAdsQ1WYpg0xZzzR5xU24kdZ9tK3OKl3LggE=
+  on:
+    tags: true
+    repo: urbas/salinity
+    python: '3.7'
