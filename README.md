@@ -8,6 +8,10 @@ pip install salinity
 
 ## Usage
 ```bash
-salt-call state.highstate | tee salt.output
+salt-call --local --state-output=changes state.highstate | tee salt.output
 salinity salt.output
 ```
+
+## Limitations
+- currently supports only local salt-call runs
+- currently supports only `--state-output=changes`
