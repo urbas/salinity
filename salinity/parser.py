@@ -1,6 +1,12 @@
 from collections import deque
 
 
+def extract_changes(highstate_output):
+    raw_lines = highstate_output.splitlines()
+    index_of_summary = raw_lines.index("--------------")
+    return raw_lines[1:index_of_summary - 1]
+
+
 def parse_changes_fmt(text):
     """
     Takes Salt's state output in the `--state-output=changes` format and returns a dictionary.

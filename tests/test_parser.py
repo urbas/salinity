@@ -1,6 +1,68 @@
 from salinity import parser
 
 
+def test_extract_changes():
+    assert [
+        "  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 Duration: 65.815 ms",
+        "  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 Duration: 65.815 ms",
+        "----------",
+        "          ID: /etc/salt/grains",
+        "    Function: file.managed",
+        "      Result: True",
+        "     Comment: File /etc/salt/grains updated",
+        "     Started: 10:16:17.259542",
+        "    Duration: 51.236 ms",
+        "     Changes:",
+        "              ----------",
+        "              diff:",
+        "                  ---",
+        "                  +++",
+        "                  @@ -1,3 +1 @@",
+        "                   roles: []",
+        "                  -foo",
+        "                  -bar",
+        "  Name: [ -f /swapfile ] || fallocate -l 4096M /swapfile",
+        "chmod 0600 /swapfile",
+        "mkswap /swapfile",
+        "swapon -a",
+        " - Function: cmd.run - Result: Clean Started: - 10:17:20.639763 Duration: 480.786 ms",
+        "  Name: localhost - Function: host.present - Result: Clean Started: - 10:16:59.791990 Duration: 1.721 ms",
+    ] == parser.extract_changes(
+        """local:
+  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 Duration: 65.815 ms
+  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 Duration: 65.815 ms
+----------
+          ID: /etc/salt/grains
+    Function: file.managed
+      Result: True
+     Comment: File /etc/salt/grains updated
+     Started: 10:16:17.259542
+    Duration: 51.236 ms
+     Changes:
+              ----------
+              diff:
+                  ---
+                  +++
+                  @@ -1,3 +1 @@
+                   roles: []
+                  -foo
+                  -bar
+  Name: [ -f /swapfile ] || fallocate -l 4096M /swapfile
+chmod 0600 /swapfile
+mkswap /swapfile
+swapon -a
+ - Function: cmd.run - Result: Clean Started: - 10:17:20.639763 Duration: 480.786 ms
+  Name: localhost - Function: host.present - Result: Clean Started: - 10:16:59.791990 Duration: 1.721 ms
+Summary for local
+--------------
+Succeeded: 142 (changed=1)
+Failed:      0
+--------------
+Total states run:     142
+Total run time:   114.396 s"""
+    )
+
+
 def test_multiple_clean_entries():
     assert [
         {
