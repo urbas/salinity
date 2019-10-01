@@ -1,23 +1,28 @@
 from collections import deque
 
 
-def extract_changes(highstate_output):
-    raw_lines = highstate_output.splitlines()
-    index_of_summary = raw_lines.index("--------------")
-    return raw_lines[1:index_of_summary - 1]
+def parse(highstate_output):
+    highstate_lines = highstate_output.splitlines()
+    changes_lines = extract_changes(highstate_lines)
+    return {"changes": parse_changes_fmt(changes_lines)}
 
 
-def parse_changes_fmt(text):
+def extract_changes(highstate_lines):
+    index_of_summary = highstate_lines.index("--------------")
+    return highstate_lines[1 : index_of_summary - 1]
+
+
+def parse_changes_fmt(change_raw_lines):
     """
     Takes Salt's state output in the `--state-output=changes` format and returns a dictionary.
     """
-    raw_lines = deque(text.splitlines())
+    raw_lines_deque = deque(change_raw_lines)
     parsed_entries = []
     current_entry = None
     current_entry_is_clean = True
 
-    while raw_lines:
-        line = raw_lines.popleft()
+    while raw_lines_deque:
+        line = raw_lines_deque.popleft()
         starts_with_name = line.startswith("  Name: ")
         starts_with_dashes = line.startswith("----------")
         if starts_with_name or starts_with_dashes:
@@ -29,6 +34,7 @@ def parse_changes_fmt(text):
             current_entry = line
         else:
             current_entry += "\n" + line
+
     if current_entry is not None:
         parsed_entries.append(parse_entry(current_entry, current_entry_is_clean))
 
