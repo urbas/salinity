@@ -8,8 +8,8 @@ def parse(highstate_output):
 
 
 def extract_changes(highstate_lines):
-    index_of_summary = highstate_lines.index("--------------")
-    return highstate_lines[1 : index_of_summary - 1]
+    index_of_summary = highstate_lines.index("--------------") - 1
+    return highstate_lines[1:index_of_summary]
 
 
 def parse_changes_fmt(change_raw_lines):

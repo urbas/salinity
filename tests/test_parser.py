@@ -71,7 +71,8 @@ swapon -a""",
 
 def test_extract_changes():
     assert [
-        "  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 Duration: 65.815 ms",
+        "  Name: /etc/salt/grains - Function: file.managed - Result: Clean Started: - 10:16:58.807965 "
+        "Duration: 65.815 ms",
         "----------",
         "          ID: /etc/salt/grains",
         "    Function: file.managed",
