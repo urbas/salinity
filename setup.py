@@ -33,5 +33,5 @@ setup(
     test_suite="tests",
     tests_require=TEST_REQUIREMENTS,
     url="https://github.com/urbas/salinity",
-    version="0.1.1",
+    version="0.1.2",
 )
