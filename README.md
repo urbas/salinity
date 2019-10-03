@@ -28,5 +28,6 @@ Top changes:
 ```
 
 ## Limitations
-- currently supports only local salt-call runs
-- currently supports only `--state-output=changes`
+- supports only local salt-call runs
+- supports only `--state-output=changes`
+- does not support colorized output
