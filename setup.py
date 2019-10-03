@@ -9,7 +9,10 @@ SETUP_REQUIREMENTS = ["pytest-runner"]
 TEST_REQUIREMENTS = ["pytest"]
 
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    readme = fh.read()
+
+with open("RELEASE_NOTES.md", "r") as fh:
+    release_notes = fh.read()
 
 setup(
     author_email="matej.urbas@gmail.com",
@@ -26,7 +29,7 @@ setup(
     install_requires=REQUIREMENTS,
     keywords="salinity",
     long_description_content_type="text/markdown",
-    long_description=long_description,
+    long_description=readme + "\n\n" + release_notes,
     name="salinity",
     packages=find_packages(include=["salinity"]),
     setup_requires=SETUP_REQUIREMENTS,

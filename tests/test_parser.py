@@ -1,3 +1,4 @@
+from os.path import dirname, join
 from salinity import parser
 
 SAMPLE_OUTPUT = """local:
@@ -44,6 +45,7 @@ def test_parse():
                 "duration_ms": 65.815,
             },
             {
+                "id": "/etc/salt/grains",
                 "name": "/etc/salt/grains",
                 "function": "file.managed",
                 "result": "True",
@@ -128,6 +130,7 @@ def test_multiple_mixed_entries():
                 "duration_ms": 65.815,
             },
             {
+                "id": "/etc/salt/grains",
                 "name": "/etc/salt/grains",
                 "function": "file.managed",
                 "result": "True",
@@ -212,6 +215,7 @@ swapon -a
 
 def test_single_changed_entry():
     assert {
+        "id": "/etc/salt/grains",
         "name": "/etc/salt/grains",
         "function": "file.managed",
         "result": "True",
@@ -234,3 +238,60 @@ def test_single_changed_entry():
                   -foo
                   -bar"""
     )
+
+
+def test_changed_entry_name_override():
+    assert {
+        "id": "pyenv-installer.installed",
+        "name": "/usr/bin/pyenv-installer",
+        "function": "file.managed",
+        "result": "True",
+        "duration_ms": 15.716,
+    } == parser.parse_changed_entry(
+        """----------
+          ID: pyenv-installer.installed
+    Function: file.managed
+        Name: /usr/bin/pyenv-installer
+      Result: True
+     Comment: File /usr/bin/pyenv-installer updated
+     Started: 21:17:57.174034
+    Duration: 15.716 ms
+     Changes:
+              ----------
+              foobar"""
+    )
+
+
+def test_changes_highstate_sample_1():
+    assert [
+        {
+            "name": "packages.installed",
+            "function": "pkg.installed",
+            "result": "Clean",
+            "duration_ms": 89.726,
+        },
+        {
+            "id": "pyenv-installer.installed",
+            "name": "/usr/bin/pyenv-installer",
+            "function": "file.managed",
+            "result": "True",
+            "duration_ms": 15.716,
+        },
+        {
+            "name": "/usr/bin/pyenv",
+            "function": "file.symlink",
+            "result": "Clean",
+            "duration_ms": 2.893,
+        },
+        {
+            "name": "service.systemctl_reload",
+            "function": "module.run",
+            "result": "Clean",
+            "duration_ms": 0.027,
+        },
+    ] == parser.parse(load_sample("changes-highstate-1.out"))["changes"]
+
+
+def load_sample(sample_name):
+    with open(join(dirname(__file__), "samples", sample_name)) as sample_file:
+        return sample_file.read()

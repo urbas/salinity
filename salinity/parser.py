@@ -1,4 +1,5 @@
 from collections import deque
+import re
 
 
 def parse(highstate_output):
@@ -8,7 +9,7 @@ def parse(highstate_output):
 
 
 def extract_changes(highstate_lines):
-    index_of_summary = highstate_lines.index("--------------") - 1
+    index_of_summary = highstate_lines.index("Summary for local")
     return highstate_lines[1:index_of_summary]
 
 
@@ -58,14 +59,27 @@ def parse_clean_entry(clean_entry):
 
 
 def parse_changed_entry(changed_entry):
-    entry_lines = changed_entry.splitlines()
+    changed_entry_regex = re.compile(
+        r"ID: (?P<id>.*)|"
+        r"Function:(?P<function>.*)|"
+        r"Name:(?P<name>.*)|"
+        r"Result: (?P<result>.*)|"
+        r"Duration: (?P<duration>.*)"
+    )
 
-    def get_value(line_number):
-        return entry_lines[line_number].split(": ")[1].strip()
+    parsed_entry = dict(
+        next(
+            (key, value.strip())
+            for key, value in needle.groupdict().items()
+            if value is not None
+        )
+        for needle in changed_entry_regex.finditer(changed_entry)
+    )
 
     return {
-        "name": get_value(1),
-        "function": get_value(2),
-        "result": get_value(3),
-        "duration_ms": float(get_value(6).split(" ")[0]),
+        "id": parsed_entry.get("id", parsed_entry.get("name")),
+        "name": parsed_entry.get("name", parsed_entry.get("id")),
+        "function": parsed_entry.get("function"),
+        "result": parsed_entry.get("result"),
+        "duration_ms": float(parsed_entry.get("duration").split(" ")[0]),
     }
