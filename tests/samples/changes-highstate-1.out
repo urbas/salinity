@@ -1,0 +1,24 @@
+local:
+  Name: packages.installed - Function: pkg.installed - Result: Clean Started: - 21:17:56.982055 Duration: 89.726 ms
+----------
+          ID: pyenv-installer.installed
+    Function: file.managed
+        Name: /usr/bin/pyenv-installer
+      Result: True
+     Comment: File /usr/bin/pyenv-installer updated
+     Started: 21:17:57.174034
+    Duration: 15.716 ms
+     Changes:
+              ----------
+              diff:
+              foo
+  Name: /usr/bin/pyenv - Function: file.symlink - Result: Clean Started: - 21:17:57.190633 Duration: 2.893 ms
+  Name: service.systemctl_reload - Function: module.run - Result: Clean Started: - 21:17:57.892428 Duration: 0.027 ms
+
+Summary for local
+-------------
+Succeeded: 4 (changed=1)
+Failed:     0
+-------------
+Total states run:     5
+Total run time:  994.351 ms
